@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'main.dart';
 
 class ConfirmationButtons extends StatelessWidget {
   final Future<Map<dynamic, dynamic>> Function() fetchCardData;
@@ -26,6 +27,20 @@ class ConfirmationButtons extends StatelessWidget {
                       }).toList(),
                     ),
                   ),
+                  actions: <Widget>[
+                    TextButton(
+                      child: const Text('Read aloud'),
+                      onPressed: () async {
+                        // Convert the card data to a string
+                        String cardDataString = cardData.entries.map((entry) {
+                          return '${entry.key}: ${entry.value}';
+                        }).join(', ');
+
+                        // Call the function to get the Watson TTS and upload it to Firebase
+                        await getWatsonTtsAndUpload(cardDataString);
+                      },
+                    ),
+                  ],
                 );
               },
             );

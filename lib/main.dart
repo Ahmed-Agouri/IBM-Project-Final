@@ -23,6 +23,7 @@ import 'package:uuid/uuid.dart';
 import 'dart:math';
 import 'profile.dart';
 import 'ar_screen.dart';
+import 'dart:typed_data';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -93,52 +94,51 @@ class MyApp extends StatelessWidget {
   }
 }
 
-// Future<File> saveAudioToTempFile(Uint8List audioBytes) async {
-//   final tempDir = await getTemporaryDirectory();
-//   final tempFile = File('${tempDir.path}/watsonTtsAudio.mp3');
-//   await tempFile.writeAsBytes(audioBytes);
-//   return tempFile;
-// }
-//
-// Future<String> uploadAudioToFirebaseStorage(File audioFile) async {
-//   final storageRef = FirebaseStorage.instance.ref('WatsonTTS/${DateTime.now().millisecondsSinceEpoch}.mp3');
-//
-//   try {
-//     await storageRef.putFile(audioFile);
-//     final String downloadUrl = await storageRef.getDownloadURL();
-//     return downloadUrl;
-//   } catch (e) {
-//     print(e);
-//     return '';
-//   }
-// }
+Future<File> saveAudioToTempFile(Uint8List audioBytes) async {
+  final tempDir = await getTemporaryDirectory();
+  final tempFile = File('${tempDir.path}/watsonTtsAudio.mp3');
+  await tempFile.writeAsBytes(audioBytes);
+  return tempFile;
+}
 
-// Future<void> playAudioFromBytes(Uint8List audioBytes) async {
-//   final tempDir = await getTemporaryDirectory();
-//   final file = File('${tempDir.path}/watson-tts-audio.wav');
-//
-//   await file.writeAsBytes(audioBytes);
-//
-//   final audioPlayer = AudioPlayer();
-//   await audioPlayer.play(DeviceFileSource(file.path));
-// }
+Future<String> uploadAudioToFirebaseStorage(File audioFile) async {
+  final storageRef = FirebaseStorage.instance.ref('WatsonTTS/${DateTime.now().millisecondsSinceEpoch}.mp3');
+
+  try {
+    await storageRef.putFile(audioFile);
+    final String downloadUrl = await storageRef.getDownloadURL();
+    return downloadUrl;
+  } catch (e) {
+    print(e);
+    return '';
+  }
+}
+
+Future<void> playAudioFromBytes(Uint8List audioBytes) async {
+  final tempDir = await getTemporaryDirectory();
+  final file = File('${tempDir.path}/watson-tts-audio.wav');
+
+  await file.writeAsBytes(audioBytes);
+
+  final audioPlayer = AudioPlayer();
+  await audioPlayer.play(DeviceFileSource(file.path));
+}
 
 
-// Future<void> getWatsonTtsAndUpload(String text) async {
-//   // Assume this function calls Watson TTS and returns audio bytes
-//   Uint8List audioBytes = await callWatsonTextToSpeechAndPlay(text);
-//
-//   // Save the audio bytes to a temporary file
-//   File audioFile = await saveAudioToTempFile(audioBytes);
-//
-//   // Upload the audio file to Firebase Storage and get the URL
-//   String downloadUrl = await uploadAudioToFirebaseStorage(audioFile);
-//
-//   print("Uploaded audio URL: $downloadUrl");
-//
-//   // Optionally, save this URL to Firebase Realtime Database
-//   // await saveAudioUrlToDatabase(downloadUrl);
-// }
+Future<void> getWatsonTtsAndUpload(String text) async {
+  // Assume this function calls Watson TTS and returns audio bytes
+  Uint8List audioBytes = (await callWatsonTextToSpeechAndUploadToFirebase(text)) as Uint8List;
+  // Save the audio bytes to a temporary file
+  File audioFile = await saveAudioToTempFile(audioBytes);
+
+  // Upload the audio file to Firebase Storage and get the URL
+  String downloadUrl = await uploadAudioToFirebaseStorage(audioFile);
+
+  print("Uploaded audio URL: $downloadUrl");
+
+  // Optionally, save this URL to Firebase Realtime Database
+  // await saveAudioUrlToDatabase(downloadUrl);
+}
 
 class MyHomePage extends StatefulWidget {
   const MyHomePage({Key? key}) : super(key: key);
@@ -170,7 +170,8 @@ class _MyHomePageState extends State<MyHomePage> {
       }
     }
     setState(() {
-      cardData = card;
+      //cardData = card;
+      cardData = cardMap.values.cast<String>().toList();
     });
     return cardMap;
   }
