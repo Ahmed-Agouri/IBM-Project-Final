@@ -1,6 +1,5 @@
 //modified the entire starter template, just as a heads-up
 //new structure with the latest updates can be found below:
-import 'dart:typed_data';
 
 import 'package:firebase_database/firebase_database.dart';
 import 'package:firebase_database/ui/firebase_animated_list.dart';
@@ -8,6 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_tts/flutter_tts.dart';
 import 'package:mobile_scanner/mobile_scanner.dart';
 import 'package:untitled/submit_data_form.dart';
+import 'chat_bot.dart';
 import 'qr_scanner_overlay.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -150,17 +150,32 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
   List<String>? cardData = [];
   MobileScannerController cameraController = MobileScannerController();
+  String? userID;
 
   @override
+  void initState() {
+    super.initState();
+    fetchCardData();
+  }
 
-
-  Future<void> fetchCardData(String? userID) async {
+  Future<Map<dynamic, dynamic>> fetchCardData([String? rawValue]) async {
     List<String>? card = await QueryFunctions.getCardData(userID);
+    Map<dynamic, dynamic> cardMap = {};
+    if (card != null) {
+      for (var entry in card) {
+        var splitEntry = entry.split(':');
+        if (splitEntry.length == 2) {
+          cardMap[splitEntry[0].trim()] = splitEntry[1].trim();
+        }
+      }
+    }
     setState(() {
       cardData = card;
     });
+    return cardMap;
   }
 
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
@@ -195,15 +210,16 @@ class _MyHomePageState extends State<MyHomePage> {
               print("cardData after scan: $cardData");
 
 
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => ArScreen()),
-                );
-              }
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => const ArScreen()),
+              );
+            }
 
             ,
           ),
           QRScannerOverlay(overlayColour: Colors.black.withOpacity(0.5)),
+          ConfirmationButtons(fetchCardData: fetchCardData),
         ],
       ),
       floatingActionButton: Stack(
@@ -218,7 +234,7 @@ class _MyHomePageState extends State<MyHomePage> {
                   MaterialPageRoute(builder: (context) => InsertDataPage()),
                 );
               },
-              child: Icon(Icons.add),
+              child: const Icon(Icons.add),
             ),
           ),
           Positioned(
@@ -270,7 +286,7 @@ class RelTimeData extends StatelessWidget {
                           children: [
                             Text(snapshot.child('User_Email').value.toString()), // Assuming you still want to display this here
                             IconButton(
-                              icon: Icon(Icons.volume_up),
+                              icon: const Icon(Icons.volume_up),
                               onPressed: () async {
                                 // final tts = FlutterTts();
                                 String userDetail = " ${snapshot.child('First_Name').value},  ${snapshot.child('Last_Name').value}, and my email address is: ${snapshot.child('User_Email').value}";
