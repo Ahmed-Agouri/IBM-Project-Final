@@ -7,6 +7,7 @@ import 'package:firebase_database/ui/firebase_animated_list.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_tts/flutter_tts.dart';
 import 'package:mobile_scanner/mobile_scanner.dart';
+import 'package:untitled/User_Authentication.dart';
 import 'package:untitled/submit_data_form.dart';
 import 'qr_scanner_overlay.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -35,7 +36,7 @@ void main() async {
           projectId: 'ibm-group-c',
           storageBucket: 'ibm-group-c.appspot.com')
   );
-  runApp(const MyApp());
+  runApp(const MyApp()); // change the authpage back to myapp
 }
 
 
@@ -88,7 +89,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return const MaterialApp(
       title: 'flutter',
-      home: MyHomePage(),
+      home: const AuthPage(), // change this to home page later
     );
   }
 }

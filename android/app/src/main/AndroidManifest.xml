@@ -2,9 +2,8 @@
 <!--    <uses-feature android:name="android.hardware.camera" android:required="false"/>-->
     <uses-permission android:name="android.permission.CAMERA"/>
     <application
-        android:label="untitled"
+        android:label="IBM Ar Application"
         android:usesCleartextTraffic="true"
-        android:name="${applicationName}"
         android:icon="@mipmap/launcher_icon">
         <activity
             android:name=".MainActivity"
