@@ -1,8 +1,39 @@
 import 'package:flutter/material.dart';
-import 'Sign_Up.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'Sign_Up.dart'; // Make sure this import points to your actual SignUpPage location
 
-class AuthPage extends StatelessWidget {
+class AuthPage extends StatefulWidget {
   const AuthPage({Key? key}) : super(key: key);
+
+  @override
+  _AuthPageState createState() => _AuthPageState();
+}
+
+class _AuthPageState extends State<AuthPage> {
+  final TextEditingController _emailController = TextEditingController();
+  final TextEditingController _passwordController = TextEditingController();
+  final FirebaseAuth _auth = FirebaseAuth.instance;
+
+  void _signIn() async {
+    try {
+      // Sign in with Firebase Authentication
+      final UserCredential userCredential = await _auth.signInWithEmailAndPassword(
+        email: _emailController.text,
+        password: _passwordController.text,
+      );
+
+      // Upon successful sign-in, navigate or show a success message
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Logged in successfully')),
+      );
+      // Optionally, navigate to a different screen here
+    } on FirebaseAuthException catch (e) {
+      // Handle errors, such as wrong password or user not found, with a SnackBar message
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Failed to sign in: ${e.message}')),
+      );
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -32,6 +63,7 @@ class AuthPage extends StatelessWidget {
                 ),
                 SizedBox(height: 40.0),
                 TextFormField(
+                  controller: _emailController,
                   decoration: InputDecoration(
                     labelText: 'Email',
                     border: OutlineInputBorder(),
@@ -40,6 +72,7 @@ class AuthPage extends StatelessWidget {
                 ),
                 SizedBox(height: 16.0),
                 TextFormField(
+                  controller: _passwordController,
                   decoration: InputDecoration(
                     labelText: 'Password',
                     border: OutlineInputBorder(),
@@ -50,11 +83,9 @@ class AuthPage extends StatelessWidget {
                 ElevatedButton(
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Colors.blue,
-                    minimumSize: Size(double.infinity, 50), // double.infinity is the width and 50 is the height
+                    minimumSize: Size(double.infinity, 50),
                   ),
-                  onPressed: () {
-                    // Implement sign-in logic
-                  },
+                  onPressed: _signIn,
                   child: Text(
                     'Sign in',
                     style: TextStyle(fontSize: 16.0),
@@ -64,7 +95,8 @@ class AuthPage extends StatelessWidget {
                 TextButton(
                   onPressed: () {
                     Navigator.of(context).push(
-                        MaterialPageRoute(builder: (context) => SignUpPage()));
+                      MaterialPageRoute(builder: (context) => SignUpPage()),
+                    );
                   },
                   child: Text(
                     "Don't have an account? Sign up",
