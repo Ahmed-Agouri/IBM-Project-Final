@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:untitled/main.dart';
-import 'Sign_Up.dart'; // Make sure this import points to your actual SignUpPage location
+import 'Sign_Up.dart';
+import 'Home.dart';
 
 class AuthPage extends StatefulWidget {
   const AuthPage({Key? key}) : super(key: key);
@@ -27,14 +28,11 @@ class _AuthPageState extends State<AuthPage> {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('Logged in successfully')),
       );
-
       // Navigate to a different screen here, after the SnackBar
-      Navigator.push(
+      Navigator.pushReplacement(
         context,
-        MaterialPageRoute(builder: (context) => const MyHomePage()),
+        MaterialPageRoute(builder: (context) => const HomePage()),
       );
-
-      //  navigate to a different screen here
     } on FirebaseAuthException catch (e) {
       // Handle errors,
       ScaffoldMessenger.of(context).showSnackBar(
