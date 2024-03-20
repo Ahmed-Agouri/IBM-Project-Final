@@ -124,20 +124,14 @@ Future<void> playAudioFromBytes(Uint8List audioBytes) async {
   await audioPlayer.play(DeviceFileSource(file.path));
 }
 
-
-Future<void> getWatsonTtsAndUpload(String text) async {
-  // Assume this function calls Watson TTS and returns audio bytes
-  Uint8List audioBytes = (await callWatsonTextToSpeechAndUploadToFirebase(text)) as Uint8List;
-  // Save the audio bytes to a temporary file
-  File audioFile = await saveAudioToTempFile(audioBytes);
-
-  // Upload the audio file to Firebase Storage and get the URL
-  String downloadUrl = await uploadAudioToFirebaseStorage(audioFile);
-
+Future<void> getWatsonTtsAndUpload(String cardData) async {
+  String ttsText = cardData;
+  Uint8List audioBytes = (await callWatsonTextToSpeechAndUploadToFirebase(ttsText)) as Uint8List;
+  FirebaseStorage storage = FirebaseStorage.instance;
+  Reference audioRef = storage.ref().child('card_data_audio.mp3');
+  await audioRef.putData(audioBytes);
+  String downloadUrl = await audioRef.getDownloadURL();
   print("Uploaded audio URL: $downloadUrl");
-
-  // Optionally, save this URL to Firebase Realtime Database
-  // await saveAudioUrlToDatabase(downloadUrl);
 }
 
 class MyHomePage extends StatefulWidget {
