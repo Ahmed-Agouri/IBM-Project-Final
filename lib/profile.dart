@@ -1,11 +1,15 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_database/firebase_database.dart';
 
 class QueryFunctions {
   // Initialize Firebase app
-  static Future<void> initialize() async {
+
+    static Future<void> initialize() async {
     await Firebase.initializeApp();
+
+
   }
 
   // Function to get UserID based on User_Email

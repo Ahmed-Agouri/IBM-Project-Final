@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
-
+import 'package:untitled/User_Information.dart';
 class SignUpPage extends StatefulWidget {
   @override
   _SignUpPageState createState() => _SignUpPageState();
@@ -40,8 +40,16 @@ class _SignUpPageState extends State<SignUpPage> {
           });
 
           // Optional: Navigate to a new page or show a success message
+
           Navigator.of(context).pop(); // Or navigate to another page
           print("User registered and data saved successfully");
+
+          Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(builder: (context) => BusinessCardPage()),
+          );
+
+
         } catch (e) {
           print("Error during sign up or data saving: $e"); // Enhanced error logging
         }
