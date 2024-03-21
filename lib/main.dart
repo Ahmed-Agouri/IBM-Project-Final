@@ -24,6 +24,7 @@ import 'package:uuid/uuid.dart';
 import 'dart:math';
 import 'profile.dart';
 import 'ar_screen.dart';
+import 'Ar_view_Screen.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -198,7 +199,7 @@ class _MyHomePageState extends State<MyHomePage> {
 
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => ArScreen()),
+                  MaterialPageRoute(builder: (context) => LocalAndWebObjectsWidget()),
                 );
               }
 

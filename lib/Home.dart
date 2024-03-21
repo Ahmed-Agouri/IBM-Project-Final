@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:mobile_scanner/mobile_scanner.dart';
 import 'main.dart';
 import 'profile.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
+import 'Ar_view_Screen.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({Key? key}) : super(key: key);
@@ -17,6 +19,7 @@ class _HomePageState extends State<HomePage> {
   final _workController = TextEditingController(text: "Work experience information placeholder");
   final _educationController = TextEditingController(text: "Education history information placeholder");
   final _jobController = TextEditingController(text: "Current job information placeholder");
+  String _fullName = 'User';
 
   @override
   void initState() {
@@ -47,6 +50,7 @@ class _HomePageState extends State<HomePage> {
           _workController.text = userData['jobHistory'] ?? 'No work experience information';
           _educationController.text = userData['educationHistory'] ?? 'No education history information';
           _jobController.text = userData['currentJob'] ?? 'No current job information';
+          _fullName = userData['fullName'] ?? 'User';
         });
       } else {
         print('User data not found.');
@@ -124,22 +128,43 @@ class _HomePageState extends State<HomePage> {
         ),
       ),
       bottomNavigationBar: BottomNavigationBar(
-        currentIndex: 1, // Assuming 'Profile' is the second tab
+        currentIndex: 1, // Assuming 'Profile' is still the second tab
         onTap: (index) {
-          if (index == 0) {
-            Navigator.pushReplacement(
-              context,
-              MaterialPageRoute(builder: (context) => MyHomePage()),
-            );
-          } else if (index == 2) {
-            print('Log Out tapped');
-            // Add your log out functionality here
+          switch (index) {
+            case 0:
+            // Navigate to MyHomePage (QR Scanner page)
+              Navigator.pushReplacement(
+                context,
+                MaterialPageRoute(builder: (context) => MyHomePage()),
+              );
+              break;
+            case 1:
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => LocalAndWebObjectsWidget()),
+              );
+            // Already on Profile page
+              break;
+            case 2:
+            // Log Out logic here
+
+              // Implement your log out functionality
+              break;
+            case 3:
+            // Navigate to AR View
+              print('Log Out tapped');
+
+              break;
           }
         },
         items: [
           BottomNavigationBarItem(
             icon: Icon(Icons.camera_alt),
             label: 'Scan',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.camera_alt_sharp),
+            label: 'Ar test',
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.person),
@@ -159,21 +184,25 @@ class _HomePageState extends State<HomePage> {
     if (user != null) {
       final uid = user.uid;
       final userRef = FirebaseDatabase.instance.ref().child('AppDB/BusinessCard/$uid');
+      final snapshot = await userRef.get();
+
+
 
       // Create a map of the data to update
-      final Map<String, dynamic> updates = {};
-      updates['bio'] = _bioController.text;
-      updates['jobHistory'] = _workController.text;
-      updates['educationHistory'] = _educationController.text;
-      updates['currentJob'] = _jobController.text;
-
-      // Perform the update operation
-      await userRef.update(updates).then((_) {
-        print('User data updated successfully.');
-      }).catchError((error) {
-        // Handle any errors that occur during the update
-        print('Error updating user data: $error');
-      });
+      if (snapshot.exists) {
+        final Map<String, dynamic> updates = {};
+        updates['bio'] = _bioController.text;
+        updates['jobHistory'] = _workController.text;
+        updates['educationHistory'] = _educationController.text;
+        updates['currentJob'] = _jobController.text;
+        // Perform the update operation
+        await userRef.update(updates).then((_) {
+          print('User data updated successfully.');
+        }).catchError((error) {
+          // Handle any errors that occur during the update
+          print('Error updating user data: $error');
+        });
+      } else{print('User data not found.');}
     }
   }
 
