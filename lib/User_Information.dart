@@ -51,7 +51,7 @@ class _BusinessCardPageState extends State<BusinessCardPage> {
     return Scaffold(
       appBar: AppBar(
         title: Text('Business Card Details'),
-        backgroundColor: Colors.blue,
+        backgroundColor: Colors.blue[600],
       ),
       body: Padding(
         padding: EdgeInsets.all(16.0),
@@ -92,7 +92,7 @@ class _BusinessCardPageState extends State<BusinessCardPage> {
                 SizedBox(height: 20),
                 ElevatedButton(
                   style: ElevatedButton.styleFrom(
-                    foregroundColor: Colors.white, backgroundColor: Colors.blue, // Text Color (Foreground color)
+                    foregroundColor: Colors.blue[600], backgroundColor: Colors.blue[600], // Text Color (Foreground color)
                   ),
                   onPressed: _saveBusinessCard,
                   child: Text('Save Business Card'),

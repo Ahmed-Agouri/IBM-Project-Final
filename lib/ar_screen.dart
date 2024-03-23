@@ -6,6 +6,13 @@ import 'package:audioplayers/audioplayers.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
+enum Option {
+  Bio,
+  Jobs,
+  EducationHistory,
+  CurrentJob,
+}
+
 class ArScreen extends StatefulWidget {
   const ArScreen({super.key});
 
@@ -78,15 +85,36 @@ class _ArScreenState extends State<ArScreen>
       name: "Astronaut",
       object3DFileName: 'avatars/Astronaut.glb',
       position: vector64.Vector3(-0.5,0.5,-2.0),
-      scale: vector64.Vector3(5, 5, 5),
+      scale: vector64.Vector3(0.1, 0.1, 0.1),
     );
 
     print("Avatar adding...");
     coreController!.addArCoreNode(avatar);
     print("Avatar added");
   }
+  void playOptionAudio(Option option) {
+    final audioPlayer = AudioPlayer();
+    String audioFile;
 
-  void outputAudio()
+    switch (option) {
+      case Option.Bio:
+        audioFile = 'john.mp3';
+        break;
+      case Option.Jobs:
+        audioFile = 'pastJobs.mp3';
+        break;
+      case Option.EducationHistory:
+        audioFile = 'education.mp3';
+        break;
+      case Option.CurrentJob:
+        audioFile = 'currentJob.mp3';
+        break;
+    }
+
+    audioPlayer.play(AssetSource(audioFile));
+  }
+
+  void JohnIntoAudio()
   {
     final audioPlayer = AudioPlayer();
     audioPlayer.play(AssetSource('john.mp3'));
@@ -107,6 +135,8 @@ class _ArScreenState extends State<ArScreen>
       print('Could not launch $mailtoLink');
     }
   }
+
+  Option? selectedOption;
 
   @override
   Widget build(BuildContext context) {
@@ -130,26 +160,53 @@ class _ArScreenState extends State<ArScreen>
             interactionPrompt: InteractionPrompt.none,
           ),
           GestureDetector(
-            // onTap: () {
-            //   setState(() {
-            //     isClicked = !isClicked; // Toggle the click state
-            //     augmentedRealityViewCreated(coreController!);
-            //   });
-            // },
-            onDoubleTap: (){
+            onTap: (){
               setState(() {
                 isAvatarClicked = !isAvatarClicked;
                 if(isAvatarClicked == true)
                 {
-                  outputAudio();
+                  showMenu(
+                    context: context,
+                    position: RelativeRect.fromLTRB(100, 100, 100, 100),
+                    items: <PopupMenuEntry<Option>>[
+                      PopupMenuItem<Option>(
+                        value: Option.Bio,
+                        child: Text('Bio'),
+                      ),
+                      PopupMenuItem<Option>(
+                        value: Option.Jobs,
+                        child: Text('Jobs'),
+                      ),
+                      PopupMenuItem<Option>(
+                        value: Option.EducationHistory,
+                        child: Text('Education History'),
+                      ),
+                      PopupMenuItem<Option>(
+                        value: Option.CurrentJob,
+                        child: Text('Current Job'),
+                      ),
+                    ],
+                  ).then((Option? value) {
+                    if (value != null) {
+                      selectedOption = value;
+                    }
+                  });
                 }
                 augmentedRealityViewCreated(coreController!);
-
+              });
+            },
+            onDoubleTap: (){
+              setState(() {
+                isAvatarClicked = !isAvatarClicked;
+                if(isAvatarClicked == true && selectedOption != null)
+                {
+                  playOptionAudio(selectedOption!);
+                }
+                augmentedRealityViewCreated(coreController!);
               });
             },
             behavior: HitTestBehavior.opaque,
           ),
-
         ],
       ),
       bottomNavigationBar: Row(

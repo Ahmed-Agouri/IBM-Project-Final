@@ -23,6 +23,7 @@ import 'generate_qr_screen.dart';
 import 'package:uuid/uuid.dart';
 import 'dart:math';
 import 'profile.dart';
+import 'Home.dart';
 import 'ar_screen.dart';
 import 'Ar_view_Screen.dart';
 
@@ -172,7 +173,7 @@ class _MyHomePageState extends State<MyHomePage> {
             onPressed: () {
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => GenerateQRScreen()),
+                MaterialPageRoute(builder: (context) => HomePage()),
               );
             },
             icon: const Icon(Icons.qr_code),
@@ -208,36 +209,36 @@ class _MyHomePageState extends State<MyHomePage> {
           QRScannerOverlay(overlayColour: Colors.black.withOpacity(0.5)),
         ],
       ),
-      floatingActionButton: Stack(
-        children: <Widget>[
-          Positioned(
-            right: 30,
-            bottom: 80,
-            child: FloatingActionButton(
-              onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => InsertDataPage()),
-                );
-              },
-              child: Icon(Icons.add),
-            ),
-          ),
-          Positioned(
-            left: 30,
-            bottom: 80,
-            child: FloatingActionButton(
-              onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => RelTimeData()),
-                );
-              },
-              child: const Icon(Icons.data_object),
-            ),
-          ),
-        ],
-      ),
+      // floatingActionButton: Stack(
+      //   children: <Widget>[
+      //     Positioned(
+      //       right: 30,
+      //       bottom: 80,
+      //       child: FloatingActionButton(
+      //         onPressed: () {
+      //           Navigator.push(
+      //             context,
+      //             MaterialPageRoute(builder: (context) => InsertDataPage()),
+      //           );
+      //         },
+      //         child: Icon(Icons.add),
+      //       ),
+      //     ),
+      //     Positioned(
+      //       left: 30,
+      //       bottom: 80,
+      //       child: FloatingActionButton(
+      //         onPressed: () {
+      //           Navigator.push(
+      //             context,
+      //             MaterialPageRoute(builder: (context) => RelTimeData()),
+      //           );
+      //         },
+      //         child: const Icon(Icons.data_object),
+      //       ),
+      //     ),
+      //   ],
+      // ),
     );
   }
 }

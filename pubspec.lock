@@ -13,10 +13,10 @@ packages:
     dependency: transitive
     description:
       name: android_intent_plus
-      sha256: e1c62bb41c90e15083b7fb84dc327fe90396cc9c1445b55ff1082144fabfb4d9
+      sha256: e92d14009f3f6ebafca6a601958aaebb793559fb03a1961fe3c5596db95af2cb
       url: "https://pub.dev"
     source: hosted
-    version: "4.0.3"
+    version: "5.0.1"
   ar_flutter_plugin:
     dependency: "direct main"
     description:
@@ -532,10 +532,10 @@ packages:
     dependency: "direct main"
     description:
       name: model_viewer_plus
-      sha256: daeee3c498ece539125933e233252aebdc0b6d842538efb7061f7eaf3b97939e
+      sha256: "633efbd081efe9af8b149c5553fa1e3e83a298ccc151955b0fe9d56a666943be"
       url: "https://pub.dev"
     source: hosted
-    version: "1.7.0"
+    version: "1.7.2"
   path:
     dependency: transitive
     description:

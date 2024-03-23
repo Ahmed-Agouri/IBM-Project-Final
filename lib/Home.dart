@@ -62,8 +62,14 @@ class _HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Profile'),
-        centerTitle: true,
+        title: const Text('QR Scanner'),
+        leading: IconButton(
+          icon: Icon(Icons.arrow_back),
+          onPressed: () {
+            // This will pop the current route off the navigation stack
+            Navigator.of(context).pop();
+          },
+        ),
       ),
       body: SingleChildScrollView(
         child: Column(
@@ -128,7 +134,7 @@ class _HomePageState extends State<HomePage> {
         ),
       ),
       bottomNavigationBar: BottomNavigationBar(
-        currentIndex: 1, // Assuming 'Profile' is still the second tab
+        currentIndex: 2, // Assuming 'Profile' is still the second tab
         onTap: (index) {
           switch (index) {
             case 0:
@@ -160,19 +166,15 @@ class _HomePageState extends State<HomePage> {
         items: [
           BottomNavigationBarItem(
             icon: Icon(Icons.camera_alt),
-            label: 'Scan',
+            label: 'Scan QR Code',
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.camera_alt_sharp),
-            label: 'Ar test',
+            icon: Icon(Icons.camera_alt_rounded),
+            label: 'Ar Enviroment',
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.person),
             label: 'Profile',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.logout),
-            label: 'Log Out',
           ),
         ],
       ),
